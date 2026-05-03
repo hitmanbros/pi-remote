@@ -7,10 +7,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourname.piremote"
+      "bundleIdentifier": "com.hitmanbros.piremote"
     },
     "android": {
-      "package": "com.yourname.piremote",
+      "package": "com.hitmanbros.piremote",
       "adaptiveIcon": {}
     }
   }

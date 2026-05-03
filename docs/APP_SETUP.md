@@ -4,7 +4,24 @@ Complete guide for installing, running, and using the pi-remote React Native app
 
 ---
 
-## Prerequisites
+## Quick Install (Android APK)
+
+The easiest way — no Node.js, no Expo, no build tools needed on your phone.
+
+1. Go to the [**Releases**](https://github.com/hitmanbros/pi-remote/releases/tag/latest) page on GitHub
+2. Download `pi-remote.apk`
+3. Enable **"Install from unknown sources"** when prompted
+4. Open the APK and install
+
+That's it. Skip to [Adding Your First Host](#adding-your-first-host-in-settings).
+
+---
+
+## Build from Source (Alternative)
+
+If you want to run via Expo or build the APK yourself:
+
+### Prerequisites
 
 | Requirement | Version / Note |
 |-------------|---------------|

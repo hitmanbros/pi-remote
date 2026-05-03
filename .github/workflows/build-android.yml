@@ -1,0 +1,91 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "app/**"
+      - ".github/workflows/build-android.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: app/package-lock.json
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android --clean
+
+      - name: Generate debug keystore
+        run: |
+          mkdir -p android/app
+          keytool -genkey -v \
+            -keystore android/app/debug.keystore \
+            -alias androiddebugkey \
+            -storepass android \
+            -keypass android \
+            -keyalg RSA \
+            -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Build signed APK
+        run: |
+          cd android
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=$(pwd)/app/debug.keystore \
+            -Pandroid.injected.signing.store.password=android \
+            -Pandroid.injected.signing.key.alias=androiddebugkey \
+            -Pandroid.injected.signing.key.password=android
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pi-remote-android
+          path: app/android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Copy APK for release
+        run: |
+          mkdir -p ../dist
+          cp android/app/build/outputs/apk/release/app-release.apk ../dist/pi-remote.apk
+
+      - name: Create/Update Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "Latest Android Build"
+          body: |
+            Automated build of pi-remote Android APK.
+
+            **Install:**
+            1. Download `pi-remote.apk` below
+            2. Enable "Install from unknown sources" in Settings
+            3. Open the APK and install
+          files: dist/pi-remote.apk
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

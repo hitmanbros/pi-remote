@@ -40,6 +40,34 @@ pi-remote is a WebSocket bridge + React Native client that lets you run `pi --mo
 
 ---
 
+## Download & Install (Android)
+
+Prebuilt APKs are automatically built on every push. No need to install Node.js or Expo on your phone.
+
+### Option 1: Download latest APK
+
+1. Go to the [**Releases**](https://github.com/hitmanbros/pi-remote/releases/tag/latest) page
+2. Download `pi-remote.apk`
+3. On your Android phone, enable **"Install from unknown sources"** (Settings → Security → Unknown sources, or the installer will prompt you)
+4. Open the downloaded APK and install
+
+> The APK is signed with a debug keystore. You may see a Play Protect warning — tap **"Install anyway"**.
+
+### Option 2: Build locally
+
+If you prefer to build the APK yourself:
+
+```bash
+cd app
+npm install
+npm run build:android
+# APK will be at app/android/app/build/outputs/apk/release/app-release.apk
+```
+
+Requires: Node.js 20+, JDK 17, Android SDK (or let `expo prebuild` handle it).
+
+---
+
 ## Prerequisites
 
 - One or more machines to run the bridge on: VPS, personal PC, homelab, or always-on Mac/Linux host. Each needs:
