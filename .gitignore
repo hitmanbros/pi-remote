@@ -13,6 +13,8 @@ bridge/dist/
 app/.expo/
 app/dist/
 app/web-build/
+app/android/
+app/ios/
 
 # macOS
 .DS_Store
