@@ -32,3 +32,4 @@ app/ios/
 
 # Misc
 *.log
+app/package-lock.json
