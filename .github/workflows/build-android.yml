@@ -42,9 +42,10 @@ jobs:
       - name: Fix Kotlin version
         run: |
           cd android
-          # Patch build.gradle to force Kotlin 1.9.25 (Compose Compiler requires it)
-          sed -i 's/kotlinVersion = findProperty(.android.kotlinVersion.) ?: "1.9.24"/kotlinVersion = "1.9.25"/g' build.gradle
-          cat build.gradle | grep -A1 -B1 kotlinVersion || true
+          # buildscript.ext.kotlinVersion doesn't propagate to rootProject.ext
+          # where expo-modules-core reads it. Add it to rootProject.ext directly.
+          sed -i '/^apply plugin: "com.facebook.react.rootproject"/i rootProject.ext.kotlinVersion = "1.9.25"' build.gradle
+          cat build.gradle | grep -n kotlinVersion || true
 
       - name: Build Debug APK
         run: |
