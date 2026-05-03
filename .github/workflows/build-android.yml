@@ -47,6 +47,14 @@ jobs:
           sed -i 's/kotlinCompilerExtensionVersion = versionsMap\[kotlinVersion()\]/kotlinCompilerExtensionVersion = "1.5.14"/' ../node_modules/expo-modules-core/android/build.gradle
           grep "kotlinCompilerExtensionVersion" ../node_modules/expo-modules-core/android/build.gradle || true
 
+      - name: Enable cleartext traffic for ws:// connections
+        run: |
+          cd android
+          # Android 9+ blocks cleartext (non-TLS) traffic in release builds.
+          # We need ws:// for Tailscale connections, so enable it.
+          sed -i 's/<application/<application android:usesCleartextTraffic="true"/' app/src/main/AndroidManifest.xml
+          grep "usesCleartextTraffic" app/src/main/AndroidManifest.xml || true
+
       - name: Build Release APK
         run: |
           cd android

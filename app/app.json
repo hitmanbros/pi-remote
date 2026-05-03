@@ -11,7 +11,8 @@
     },
     "android": {
       "package": "com.hitmanbros.piremote",
-      "adaptiveIcon": {}
+      "adaptiveIcon": {},
+      "usesCleartextTraffic": true
     }
   }
 }
