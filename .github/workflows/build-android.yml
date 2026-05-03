@@ -45,7 +45,11 @@ jobs:
           # buildscript.ext.kotlinVersion doesn't propagate to rootProject.ext
           # where expo-modules-core reads it. Add it to rootProject.ext directly.
           sed -i '/^apply plugin: "com.facebook.react.rootproject"/i rootProject.ext.kotlinVersion = "1.9.25"' build.gradle
+          # React Native's libs.versions.toml pins kotlin to 1.9.24, which controls
+          # the actual Kotlin Gradle Plugin version. Patch it to 1.9.25.
+          sed -i 's/kotlin = "1.9.24"/kotlin = "1.9.25"/' ../node_modules/react-native/gradle/libs.versions.toml
           cat build.gradle | grep -n kotlinVersion || true
+          grep "kotlin = " ../node_modules/react-native/gradle/libs.versions.toml || true
 
       - name: Build Debug APK
         run: |
