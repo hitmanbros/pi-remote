@@ -13,6 +13,8 @@ The easiest way — no Node.js, no Expo, no build tools needed on your phone.
 3. Enable **"Install from unknown sources"** when prompted
 4. Open the APK and install
 
+> This is a debug build. You may see a Play Protect warning — tap **"Install anyway"**.
+
 That's it. Skip to [Adding Your First Host](#adding-your-first-host-in-settings).
 
 ---

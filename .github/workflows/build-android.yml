@@ -39,37 +39,21 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean
 
-      - name: Generate debug keystore
-        run: |
-          mkdir -p android/app
-          keytool -genkey -v \
-            -keystore android/app/debug.keystore \
-            -alias androiddebugkey \
-            -storepass android \
-            -keypass android \
-            -keyalg RSA \
-            -validity 10000 \
-            -dname "CN=Android Debug,O=Android,C=US"
-
-      - name: Build signed APK
+      - name: Build Debug APK
         run: |
           cd android
-          ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=$(pwd)/app/debug.keystore \
-            -Pandroid.injected.signing.store.password=android \
-            -Pandroid.injected.signing.key.alias=androiddebugkey \
-            -Pandroid.injected.signing.key.password=android
+          ./gradlew assembleDebug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: pi-remote-android
-          path: app/android/app/build/outputs/apk/release/app-release.apk
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Copy APK for release
         run: |
           mkdir -p ../dist
-          cp android/app/build/outputs/apk/release/app-release.apk ../dist/pi-remote.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk ../dist/pi-remote.apk
 
       - name: Create/Update Release
         uses: softprops/action-gh-release@v2
@@ -77,12 +61,13 @@ jobs:
           tag_name: latest
           name: "Latest Android Build"
           body: |
-            Automated build of pi-remote Android APK.
+            Automated build of pi-remote Android debug APK.
 
             **Install:**
             1. Download `pi-remote.apk` below
             2. Enable "Install from unknown sources" in Settings
             3. Open the APK and install
+            4. You may see a Play Protect warning — tap **"Install anyway"
           files: dist/pi-remote.apk
           make_latest: true
         env:
