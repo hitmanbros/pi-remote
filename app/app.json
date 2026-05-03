@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "pi-remote",
+    "slug": "pi-remote",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourname.piremote"
+    },
+    "android": {
+      "package": "com.yourname.piremote",
+      "adaptiveIcon": {}
+    }
+  }
+}
