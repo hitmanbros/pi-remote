@@ -47,22 +47,22 @@ jobs:
           sed -i 's/kotlinCompilerExtensionVersion = versionsMap\[kotlinVersion()\]/kotlinCompilerExtensionVersion = "1.5.14"/' ../node_modules/expo-modules-core/android/build.gradle
           grep "kotlinCompilerExtensionVersion" ../node_modules/expo-modules-core/android/build.gradle || true
 
-      - name: Build Debug APK
+      - name: Build Release APK
         run: |
           cd android
-          ./gradlew assembleDebug \
+          ./gradlew assembleRelease \
             -Pkotlin.compiler.suppressKotlinVersionCompatibilityCheck=true
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: pi-remote-android
-          path: app/android/app/build/outputs/apk/debug/app-debug.apk
+          path: app/android/app/build/outputs/apk/release/app-release.apk
 
       - name: Copy APK for release
         run: |
           mkdir -p ../dist
-          cp android/app/build/outputs/apk/debug/app-debug.apk ../dist/pi-remote.apk
+          cp android/app/build/outputs/apk/release/app-release.apk ../dist/pi-remote.apk
 
       - name: Create/Update Release
         uses: softprops/action-gh-release@v2
@@ -70,13 +70,13 @@ jobs:
           tag_name: latest
           name: "Latest Android Build"
           body: |
-            Automated build of pi-remote Android debug APK.
+            Automated build of pi-remote Android APK.
 
             **Install:**
             1. Download `pi-remote.apk` below
             2. Enable "Install from unknown sources" in Settings
             3. Open the APK and install
-            4. You may see a Play Protect warning — tap **"Install anyway"
+            4. You may see a Play Protect warning — tap **"Install anyway"**
           files: dist/pi-remote.apk
           make_latest: true
         env:

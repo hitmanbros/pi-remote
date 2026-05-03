@@ -51,7 +51,7 @@ Prebuilt APKs are automatically built on every push. No need to install Node.js 
 3. On your Android phone, enable **"Install from unknown sources"** (Settings → Security → Unknown sources, or the installer will prompt you)
 4. Open the downloaded APK and install
 
-> This is a debug APK. You may see a Play Protect warning — tap **"Install anyway"**.
+> You may see a Play Protect warning — tap **"Install anyway"**.
 
 ### Option 2: Build locally
 
