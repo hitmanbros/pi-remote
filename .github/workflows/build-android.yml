@@ -42,7 +42,9 @@ jobs:
       - name: Fix Kotlin version
         run: |
           cd android
-          echo "android.kotlinVersion=1.9.25" >> gradle.properties
+          # Patch build.gradle to force Kotlin 1.9.25 (Compose Compiler requires it)
+          sed -i 's/kotlinVersion = findProperty(.android.kotlinVersion.) ?: "1.9.24"/kotlinVersion = "1.9.25"/g' build.gradle
+          cat build.gradle | grep -A1 -B1 kotlinVersion || true
 
       - name: Build Debug APK
         run: |
