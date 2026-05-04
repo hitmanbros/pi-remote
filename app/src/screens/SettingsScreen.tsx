@@ -121,7 +121,10 @@ export function SettingsScreen({
   const connect = useCallback(() => {
     const host = settings.hosts.find((h) => h.id === settings.activeHostId);
     if (host) {
+      Alert.alert("Connecting", `URL: ${host.serverUrl}`);
       ws.switchHost(host);
+    } else {
+      Alert.alert("Error", "No active host found");
     }
   }, [settings, ws]);
 

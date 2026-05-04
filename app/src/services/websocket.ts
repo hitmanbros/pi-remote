@@ -28,12 +28,22 @@ export class PiWebSocket {
   }
 
   connect(): void {
-    if (this.ws || !this.activeHost) return;
+    if (this.ws || !this.activeHost) {
+      console.log("[WS] blocked: ws=", !!this.ws, "host=", !!this.activeHost);
+      return;
+    }
     this.shouldReconnect = true;
     const url = this.activeHost.serverUrl.replace(/^http/, "ws");
-    this.ws = new WebSocket(url);
+    console.log("[WS] connecting to", url);
+    try {
+      this.ws = new WebSocket(url);
+    } catch (err) {
+      console.log("[WS] constructor threw", err);
+      return;
+    }
 
     this.ws.onopen = () => {
+      console.log("[WS] onopen");
       this.authenticated = false;
       this.send({ type: "auth", token: this.activeHost!.token });
     };
@@ -41,6 +51,7 @@ export class PiWebSocket {
     this.ws.onmessage = (e) => {
       try {
         const data = JSON.parse(e.data as string) as AgentEvent;
+        console.log("[WS] msg", data.type);
         if (data.type === "auth" && (data as Record<string, unknown>).success === true) {
           this.authenticated = true;
           this.notifyConn(true);
@@ -61,7 +72,8 @@ export class PiWebSocket {
       }
     };
 
-    this.ws.onclose = () => {
+    this.ws.onclose = (ev) => {
+      console.log("[WS] onclose code=", ev.code, "reason=", ev.reason);
       this.ws = null;
       this.authenticated = false;
       this.notifyConn(false);
@@ -70,7 +82,8 @@ export class PiWebSocket {
       }
     };
 
-    this.ws.onerror = () => {
+    this.ws.onerror = (err) => {
+      console.log("[WS] onerror", err);
       this.ws?.close();
     };
   }
